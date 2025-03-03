@@ -51,8 +51,12 @@ class Blog_model extends CI_Model {
         $data = [
             'title' => $this->input->post('title'),
             'content' => $this->input->post('content'),
-            'image' => $this->upload_image_file('blog_image') // Save image file path
+            'category_id' => $this->input->post('category_id'), // Store category ID
+            'image' => $this->upload_image_file('blog_image'), // Save image file path
+            'user_id' => $this->session->userdata('user_id'), // Store the logged-in user ID
+            'created_at' => date('Y-m-d H:i:s') // Save current timestamp
         ];
+        
         return $this->db->insert('blogs', $data);
     }
     
@@ -68,7 +72,52 @@ class Blog_model extends CI_Model {
         }
         return null;
     }
+
+    // Fetch blogs with optional category filter, search term, and pagination
+    public function get_blogs($limit, $offset, $category_id = NULL, $search_term = NULL) {
+        if ($category_id) {
+            $this->db->where('category_id', $category_id);
+        }
+        if ($search_term) {
+            $this->db->like('title', $search_term);
+            $this->db->or_like('content', $search_term);
+        }
+        $query = $this->db->get('blogs', $limit, $offset);
+        return $query->result_array();
+    }
+
+    // Count total blogs for pagination
+    public function count_blogs($category_id = NULL, $search_term = NULL) {
+        if ($category_id) {
+            $this->db->where('category_id', $category_id);
+        }
+        if ($search_term) {
+            $this->db->like('title', $search_term);
+            $this->db->or_like('content', $search_term);
+        }
+        return $this->db->count_all_results('blogs');
+    }
+
+    // Fetch all categories
+    public function get_categories() {
+        $query = $this->db->get('categories');
+        return $query->result_array();
+    }
     
+    // Get blogs by category ID
+    public function get_blogs_by_category($category_id) {
+        $this->db->where('category_id', $category_id);
+        $query = $this->db->get('blogs');
+        return $query->result_array();
+    }
+
+    // Get category details by ID
+    public function get_category_by_id($category_id) {
+        $this->db->where('id', $category_id);
+        $query = $this->db->get('categories');
+        return $query->row_array();
+    }
+
 }
 
 ?>

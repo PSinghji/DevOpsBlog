@@ -56,6 +56,7 @@ $route['translate_uri_dashes'] = FALSE;
 $route['user/login'] = 'user/login';
 $route['user/logout'] = 'user/logout';
 $route['user/register'] = 'user/register';
+$route['blog/category/(:num)'] = 'blog/category/$1';
 
 
 // $route['default_controller'] = 'blog';

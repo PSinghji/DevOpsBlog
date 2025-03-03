@@ -23,3 +23,25 @@
             </div>
         </div>
     </nav>
+    
+    <div class="container mx-auto mt-4 flex">
+        <!-- Left-side navigation bar -->
+        <aside class="w-1/4 bg-gray-200 p-4 h-screen">
+            <h2 class="text-lg font-semibold mb-2">Categories</h2>
+            <ul>
+                <?php if (!empty($categories)) : ?>
+                    <?php foreach ($categories as $category): ?>
+                            <li class="mb-1">
+                                <a href="<?= site_url('blog/category/'.$category['id']); ?>" 
+                                class="text-blue-600"><?= $category['name']; ?>
+                                </a>
+                            </li>
+            <?php endforeach; ?>
+                <?php else : ?>
+                    <li>No categories available</li>
+                <?php endif; ?>
+            </ul>
+        </aside>
+       
+        <!-- Main content area -->
+        <main class="w-3/4 ml-4">
