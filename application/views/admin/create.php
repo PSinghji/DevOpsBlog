@@ -1,25 +1,29 @@
 <?php $this->load->view('admin/templates/header'); ?>
 
-<div class="max-w-2xl mx-auto bg-white p-6 rounded shadow-md mt-10">
-    <h2 class="text-2xl font-bold mb-4 text-center">Create New Blog Post</h2>
+<h2 class="text-xl font-bold mb-4">Create New Blog Post</h2>
 
-    <?php if (validation_errors()): ?>
-        <div class="text-red-500 mb-4"><?= validation_errors(); ?></div>
-    <?php endif; ?>
+<form action="<?= site_url('admin/create'); ?>" method="post" enctype="multipart/form-data">
+    <label class="block text-gray-700 font-bold mb-2">Title:</label>
+    <input type="text" name="title" class="w-full p-2 border border-gray-300 rounded-lg" required>
 
-    <form action="<?= site_url('admin/create'); ?>" method="post">
-        <div class="mb-4">
-            <label class="block text-gray-700">Title</label>
-            <input type="text" name="title" class="w-full border border-gray-300 p-2 rounded" required>
-        </div>
+    <label class="block text-gray-700 font-bold mt-4 mb-2">Content:</label>
+    <textarea name="content" id="editor" class="w-full p-2 border border-gray-300 rounded-lg"></textarea>
 
-        <div class="mb-4">
-            <label class="block text-gray-700">Content</label>
-            <textarea name="content" class="w-full border border-gray-300 p-2 rounded h-40" required></textarea>
-        </div>
+    <label class="block text-gray-700 font-bold mt-4 mb-2">Upload Image:</label>
+    <input type="file" name="blog_image" class="w-full p-2 border border-gray-300 rounded-lg">
 
-        <button type="submit" class="w-full bg-green-500 text-white py-2 rounded">Publish Blog</button>
-    </form>
-</div>
+    <button type="submit" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg">Publish Post</button>
+</form>
+
+<!-- CKEditor Script -->
+<script src="https://cdn.ckeditor.com/4.16.2/full/ckeditor.js"></script>
+<script>
+    CKEDITOR.replace('editor', {
+        height: 400,
+        filebrowserUploadUrl: "<?= site_url('admin/upload_image'); ?>",
+        filebrowserUploadMethod: 'form'
+    });
+</script>
+
 
 <?php $this->load->view('admin/templates/footer'); ?>

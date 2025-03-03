@@ -18,16 +18,16 @@ class Admin extends CI_Controller {
             redirect('admin/login');
         }
         $data['blogs'] = $this->Blog_model->get_all_blogs();
-        $this->load->view('admin/templates/header');
+        //$this->load->view('admin/templates/header');
         $this->load->view('admin/dashboard', $data);
-        $this->load->view('admin/templates/footer');
+        //$this->load->view('admin/templates/footer');
     }
     
     // Admin login
     public function login() {
-        $this->load->view('admin/templates/header');
+        //$this->load->view('admin/templates/header');
         $this->load->view('admin/login');
-        $this->load->view('admin/templates/footer');
+        //$this->load->view('admin/templates/footer');
     }
     
     // Process admin login
@@ -60,9 +60,9 @@ class Admin extends CI_Controller {
         $this->form_validation->set_rules('content', 'Content', 'required');
         
         if ($this->form_validation->run() === FALSE) {
-            $this->load->view('admin/templates/header');
+            //$this->load->view('admin/templates/header');
             $this->load->view('admin/create');
-            $this->load->view('admin/templates/footer');
+            //$this->load->view('admin/templates/footer');
         } else {
             $this->Blog_model->insert_blog();
             redirect('admin');
@@ -81,9 +81,9 @@ class Admin extends CI_Controller {
         $this->form_validation->set_rules('content', 'Content', 'required');
         
         if ($this->form_validation->run() === FALSE) {
-            $this->load->view('admin/templates/header');
+            //$this->load->view('admin/templates/header');
             $this->load->view('admin/edit', $data);
-            $this->load->view('admin/templates/footer');
+           // $this->load->view('admin/templates/footer');
         } else {
             $this->Blog_model->update_blog($id);
             redirect('admin');
@@ -98,6 +98,30 @@ class Admin extends CI_Controller {
         $this->Blog_model->delete_blog($id);
         redirect('admin');
     }
+    // Function to handle image uploads in CKEditor
+public function upload_image() {
+    if (isset($_FILES['upload']['name'])) {
+        $config['upload_path'] = './uploads/';
+        $config['allowed_types'] = 'jpg|jpeg|png|gif';
+        $config['max_size'] = 2048; // 2MB max size
+
+        $this->load->library('upload', $config);
+
+        if ($this->upload->do_upload('upload')) {
+            $file_data = $this->upload->data();
+            $url = base_url('uploads/' . $file_data['file_name']);
+
+            echo json_encode([
+                "uploaded" => 1,
+                "fileName" => $file_data['file_name'],
+                "url" => $url
+            ]);
+        } else {
+            echo json_encode(['uploaded' => 0, 'error' => $this->upload->display_errors()]);
+        }
+    }
+}
+
 }
 
 ?>

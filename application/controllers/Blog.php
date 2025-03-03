@@ -45,5 +45,29 @@ class Blog extends CI_Controller {
             redirect('/');
         }
     }
+
+    public function upload_image() {
+        if (isset($_FILES['upload']['name'])) {
+            $config['upload_path'] = './uploads/';
+            $config['allowed_types'] = 'jpg|jpeg|png|gif';
+            $config['max_size'] = 2048; // 2MB max
+    
+            $this->load->library('upload', $config);
+    
+            if ($this->upload->do_upload('upload')) {
+                $file_data = $this->upload->data();
+                $url = base_url('uploads/' . $file_data['file_name']);
+    
+                echo json_encode([
+                    "uploaded" => 1,
+                    "fileName" => $file_data['file_name'],
+                    "url" => $url
+                ]);
+            } else {
+                echo json_encode(['uploaded' => 0, 'error' => $this->upload->display_errors()]);
+            }
+        }
+    }
+    
     
 }
